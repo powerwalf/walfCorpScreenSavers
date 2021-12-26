@@ -3,13 +3,14 @@
 // if you see a magic number 100, its the max number of objects
 public class Whitney : MonoBehaviour
 {
-	protected const int k_maxNumberOfObjects = 100;  // magic number alert! make sure to update m_numberOfObjects Range(max)
+	protected const int k_maxNumberOfObjects = 200;  // magic number alert! make sure to update m_numberOfObjects Range(max)
 
 	[Header("Prefab")]
 	[SerializeField] protected GameObject m_objectPrefab;
+	[SerializeField] protected float m_timeBetweenParameterChanges = 60.0f;  // seconds
 
 	[Header("Whitney")]
-	[SerializeField] [Range(1, 100)] protected int m_numberOfObjects = 50; // magic number alert! make sure Range(max) matches k_maxNumberOfObjects
+	[SerializeField] [Range(1, 200)] protected int m_numberOfObjects = 50; // magic number alert! make sure Range(max) matches k_maxNumberOfObjects
 	[SerializeField] [Range(0.5f, 2.0f)] protected float m_circleSize = 1.0f;
 	[SerializeField] [Range(0.001f, 0.1f)] protected float m_speedScaler = 0.01f;
 	[SerializeField] protected bool m_3dMode = false;
@@ -23,8 +24,8 @@ public class Whitney : MonoBehaviour
 
 	[Header("Color")]
 	[SerializeField] [Range(0.001f, 1f)] protected float m_colorHueSpeed = 1f;
-	[SerializeField] [Range(0f, 1f)] protected float m_colorSaturation = 1f;
-	[SerializeField] [Range(0f, 1f)] protected float m_colorBrightness = 1f;
+	[SerializeField] [Range(0f, 1f)] protected float m_colorSaturation = 1f;  // boring
+	[SerializeField] [Range(0f, 1f)] protected float m_colorBrightness = 1f;  // boring
 
 	[SerializeField] [Range(0f, 1f)] protected float m_colorAlpha = 0.75f;
 	//[SerializeField] [Range(0f, 1f)] protected float m_metallic = 0.7f;
@@ -42,12 +43,14 @@ public class Whitney : MonoBehaviour
 	protected Renderer[] m_objectRenderers;
 	//protected Light[] m_lights;
 	protected float m_phase = 0.0f;
-	protected float m_timeSinceLastPhaseSync = 0f;
-	protected const float k_timeBetweenPhaseSyncs = 10.0f;
+	protected bool m_was3dModeOnLastFrame;
+	protected float m_timeSinceLastWhitneyChange = 0f;
 
 
 	void Start()
 	{
+		m_was3dModeOnLastFrame = m_3dMode;
+
 		m_objects = new GameObject[k_maxNumberOfObjects];
 		m_objectRenderers = new Renderer[k_maxNumberOfObjects];
 		//m_lights = new Light[k_maxNumberOfObjects];
@@ -56,12 +59,39 @@ public class Whitney : MonoBehaviour
 			m_objects[i] = GameObject.Instantiate(m_objectPrefab, this.transform);
 			m_objects[i].SetActive(false);
 			m_objectRenderers[i] = m_objects[i].GetComponent<Renderer>();
+			m_objectRenderers[i].sortingOrder = i;
 		//	m_lights[i] = m_objects[i].GetComponent<Light>();
+		}
+	}
+
+	protected void On3dModeChanged()
+	{
+		for(int i = 0; i < m_objectRenderers.Length; i++)
+		{
+			m_objectRenderers[i].sortingOrder = m_3dMode ? 0 : i;
 		}
 	}
 
 	private void Update()
 	{
+		if(Input.GetMouseButtonDown(1))
+		{
+			m_timeSinceLastWhitneyChange = 0f;
+			SetFromWhitneyData(GetRandomWhitneyData());
+		}
+		else
+		{
+			if(m_timeSinceLastWhitneyChange > m_timeBetweenParameterChanges)
+			{
+				m_timeSinceLastWhitneyChange = 0f;
+				SetFromWhitneyData(GetRandomWhitneyData());
+			}
+			else
+			{
+				m_timeSinceLastWhitneyChange += Time.deltaTime;
+			}
+		}
+
 		Vector3 baseScale = new Vector3(m_baseScaleX, m_baseScaleY, m_baseScaleZ) * m_globalScale;
 
 		for(int i = 0; i < m_objects.Length; i++)
@@ -111,9 +141,92 @@ public class Whitney : MonoBehaviour
 			m_objects[i].transform.rotation = rotation;
 		}
 
-		m_phase += Time.deltaTime * m_speedScaler * (k_maxNumberOfObjects / m_numberOfObjects);
+		if(m_3dMode != m_was3dModeOnLastFrame)
+		{
+			On3dModeChanged();
+			m_was3dModeOnLastFrame = m_3dMode;
+		}
 
-		m_timeSinceLastPhaseSync += Time.deltaTime;
+		m_phase += Time.deltaTime * m_speedScaler * (k_maxNumberOfObjects / m_numberOfObjects);
+	}
+
+	public void SetFromWhitneyData(WhitneyData _data)
+	{
+		//m_objectPrefab;
+
+		m_numberOfObjects = _data.m_numberOfObjects;
+		m_circleSize = _data.m_circleSize;
+		m_speedScaler = _data.m_speedScaler;
+
+		m_globalScale = _data.m_globalScale;
+		m_baseScaleX = _data.m_baseScaleX;
+		m_baseScaleY = _data.m_baseScaleY;
+		m_baseScaleZ = _data.m_baseScaleZ;
+
+		m_colorHueSpeed = _data.m_colorHueSpeed;
+		m_colorSaturation = _data.m_colorSaturation;
+		m_colorBrightness = _data.m_colorBrightness;
+		m_colorAlpha = _data.m_colorAlpha;
+
+		m_rotateX = _data.m_rotateX;
+		m_rotateY = _data.m_rotateY;
+		m_rotateZ = _data.m_rotateZ;
+		m_rotationX = _data.m_rotationX;
+		m_rotationY = _data.m_rotationY;
+		m_rotationZ = _data.m_rotationZ;
+
+		m_3dMode = _data.m_3dMode;
+		m_tubeSpacing = _data.m_tubeSpacing;
+	}
+
+	public WhitneyData GetRandomWhitneyData()
+	{
+		WhitneyData randomData = ScriptableObject.CreateInstance<WhitneyData>();
+
+		randomData.m_3dMode = (Random.Range(0, 2) == 0);
+		randomData.m_tubeSpacing = Random.Range(0.01f, 0.5f);
+
+		if(randomData.m_3dMode)
+		{
+			randomData.m_numberOfObjects = Random.Range(75, k_maxNumberOfObjects);
+			randomData.m_circleSize = Random.Range(2f, 3f);
+		}
+		else
+		{
+			randomData.m_numberOfObjects = Random.Range(25, k_maxNumberOfObjects);
+			randomData.m_circleSize = Random.Range(1f, 2f);
+		}
+
+		randomData.m_speedScaler = Random.Range(0.001f, 0.01f);
+
+		randomData.m_globalScale = Random.Range(0.5f, 1f);
+
+		if(Random.Range(0, 20) == 0)  // every once in a while, make a perfect orb
+		{
+			float randomScale = Random.Range(1f, 2f);
+			randomData.m_baseScaleX = randomData.m_baseScaleY = randomData.m_baseScaleZ = randomScale;
+		}
+		else
+		{
+			randomData.m_baseScaleX = Random.Range(0.1f, 1f);
+			randomData.m_baseScaleY = Random.Range(0.1f, 1f);
+			randomData.m_baseScaleZ = Random.Range(0.1f, 1f);
+		}
+
+		randomData.m_colorHueSpeed = Random.Range(0.01f, 0.75f);
+		randomData.m_colorSaturation = 1f;
+		randomData.m_colorBrightness = 1f;
+
+		randomData.m_colorAlpha = Random.Range(0.25f, 1f);
+
+		randomData.m_rotateX = Random.Range(0, 3) == 0;
+		randomData.m_rotateY = Random.Range(0, 3) == 0;
+		randomData.m_rotateZ = Random.Range(0, 3) == 0;
+		randomData.m_rotationX = Random.Range(0f, 360f);
+		randomData.m_rotationY = Random.Range(0f, 360f);
+		randomData.m_rotationZ = Random.Range(0f, 360f);
+
+		return randomData;
 	}
 }
 

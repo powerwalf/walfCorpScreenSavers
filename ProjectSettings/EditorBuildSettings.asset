@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/screensaver.unity
+    path: Assets/screensaver.unity
     guid: e1dc7622bdcf999429bb72ee45050ac8
   m_configObjects: {}
