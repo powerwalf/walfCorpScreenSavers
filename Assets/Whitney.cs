@@ -7,7 +7,6 @@ public class Whitney : MonoBehaviour
 
 	[Header("Prefab")]
 	[SerializeField] protected GameObject m_objectPrefab;
-	[SerializeField] protected float m_timeBetweenParameterChanges = 60.0f;  // seconds
 
 	[Header("Whitney")]
 	[SerializeField] [Range(1, 200)] protected int m_numberOfObjects = 50; // magic number alert! make sure Range(max) matches k_maxNumberOfObjects
@@ -44,7 +43,6 @@ public class Whitney : MonoBehaviour
 	//protected Light[] m_lights;
 	protected float m_phase = 0.0f;
 	protected bool m_was3dModeOnLastFrame;
-	protected float m_timeSinceLastWhitneyChange = 0f;
 
 
 	void Start()
@@ -74,24 +72,6 @@ public class Whitney : MonoBehaviour
 
 	private void Update()
 	{
-		if(Input.GetMouseButtonDown(1))
-		{
-			m_timeSinceLastWhitneyChange = 0f;
-			SetFromWhitneyData(GetRandomWhitneyData());
-		}
-		else
-		{
-			if(m_timeSinceLastWhitneyChange > m_timeBetweenParameterChanges)
-			{
-				m_timeSinceLastWhitneyChange = 0f;
-				SetFromWhitneyData(GetRandomWhitneyData());
-			}
-			else
-			{
-				m_timeSinceLastWhitneyChange += Time.deltaTime;
-			}
-		}
-
 		Vector3 baseScale = new Vector3(m_baseScaleX, m_baseScaleY, m_baseScaleZ) * m_globalScale;
 
 		for(int i = 0; i < m_objects.Length; i++)
@@ -227,6 +207,11 @@ public class Whitney : MonoBehaviour
 		randomData.m_rotationZ = Random.Range(0f, 360f);
 
 		return randomData;
+	}
+
+	public void SetWithRandomSettings()
+	{
+		SetFromWhitneyData(GetRandomWhitneyData());
 	}
 }
 
