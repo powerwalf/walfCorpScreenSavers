@@ -177,7 +177,7 @@ public class Whitney : MonoBehaviour
 			randomData.m_circleSize = Random.Range(1f, 2f);
 		}
 
-		randomData.m_speedScaler = Random.Range(0.001f, 0.01f);
+		randomData.m_speedScaler = Random.Range(0.003f, 0.008f);
 
 		randomData.m_globalScale = Random.Range(0.5f, 1f);
 

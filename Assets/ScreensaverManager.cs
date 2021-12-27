@@ -13,6 +13,11 @@ public class ScreensaverManager : MonoBehaviour
 
 	private void Update()
     {
+		if(Input.GetMouseButtonDown(0) || Input.GetMouseButton(1))
+		{
+			return;
+		}
+
 		if(Input.anyKeyDown)
 		{
 			Application.Quit();
