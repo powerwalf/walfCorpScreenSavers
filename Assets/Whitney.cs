@@ -3,23 +3,28 @@
 // if you see a magic number 100, its the max number of objects
 public class Whitney : MonoBehaviour
 {
-	protected const int k_maxNumberOfObjects = 200;  // magic number alert! make sure to update m_numberOfObjects Range(max)
+	protected const int k_maxNumberOfObjects = 500;  // magic number alert! make sure to update m_numberOfObjects Range(max)
+
 
 	[Header("Prefab")]
 	[SerializeField] protected GameObject m_objectPrefab;
 
 	[Header("Whitney")]
-	[SerializeField] [Range(1, 200)] protected int m_numberOfObjects = 50; // magic number alert! make sure Range(max) matches k_maxNumberOfObjects
-	[SerializeField] [Range(0.5f, 2.0f)] protected float m_circleSize = 1.0f;
-	[SerializeField] [Range(0.001f, 0.1f)] protected float m_speedScaler = 0.01f;
+	[SerializeField] [Range(1, 500)] protected int m_numberOfObjects = 50; // magic number alert! make sure Range(max) matches k_maxNumberOfObjects
+	[SerializeField] [Range(0.5f, 5.0f)] protected float m_circleSize = 1.0f;
+	[SerializeField] [Range(0.001f, 0.01f)] protected float m_speedScaler = 0.01f;
+	[SerializeField] protected bool m_disableHarmonicScaling = false;
+
+	[Header("3D Tube Mode")]
 	[SerializeField] protected bool m_3dMode = false;
-	[SerializeField] [Range(0.01f, 1f)] protected float m_tubeSpacing = 1.0f;
+	[SerializeField] [Range(0.001f, 1f)] protected float m_tubeSpacing = 1.0f;
+	[SerializeField] protected bool m_reverseZOrderIn3dMode = true;
 
 	[Header("Scale")]
 	[SerializeField] [Range(0.001f, 1f)] protected float m_globalScale = 0.25f;
-	[SerializeField] [Range(0.1f, 1f)] protected float m_baseScaleX = 1.0f;
-	[SerializeField] [Range(0.1f, 1f)] protected float m_baseScaleY = 1.0f;
-	[SerializeField] [Range(0.1f, 1f)] protected float m_baseScaleZ = 1.0f;
+	[SerializeField] [Range(0.01f, 1f)] protected float m_baseScaleX = 1.0f;
+	[SerializeField] [Range(0.01f, 1f)] protected float m_baseScaleY = 1.0f;
+	[SerializeField] [Range(0.01f, 1f)] protected float m_baseScaleZ = 1.0f;
 
 	[Header("Color")]
 	[SerializeField] [Range(0.001f, 1f)] protected float m_colorHueSpeed = 1f;
@@ -72,6 +77,13 @@ public class Whitney : MonoBehaviour
 
 	private void Update()
 	{
+#if UNITY_EDITOR
+		if(Input.GetKeyDown(KeyCode.S))
+		{
+			SaveCurrentWhitneyDataToFile();
+		}
+#endif
+
 		Vector3 baseScale = new Vector3(m_baseScaleX, m_baseScaleY, m_baseScaleZ) * m_globalScale;
 
 		for(int i = 0; i < m_objects.Length; i++)
@@ -90,7 +102,14 @@ public class Whitney : MonoBehaviour
 			Vector3 position = new Vector3(Mathf.Cos(scaledPhase) * m_circleSize, Mathf.Sin(scaledPhase) * m_circleSize, 0.0f) + this.transform.position;
 			if(m_3dMode)
 			{
-				position.z += m_tubeSpacing * i;
+				if(m_reverseZOrderIn3dMode)
+				{
+					position.z += m_tubeSpacing * (m_numberOfObjects - i);
+				}
+				else
+				{
+					position.z += m_tubeSpacing * i;
+				}
 			}
 			m_objects[i].transform.position = position;
 
@@ -212,6 +231,49 @@ public class Whitney : MonoBehaviour
 	public void SetWithRandomSettings()
 	{
 		SetFromWhitneyData(GetRandomWhitneyData());
+	}
+
+	public void SaveCurrentWhitneyDataToFile()
+	{
+		WhitneyData _data = ScriptableObject.CreateInstance<WhitneyData>();
+
+		_data.m_numberOfObjects = m_numberOfObjects;
+		_data.m_circleSize = m_circleSize;
+		_data.m_speedScaler = m_speedScaler;
+
+		_data.m_globalScale = m_globalScale;
+		_data.m_baseScaleX = m_baseScaleX;
+		_data.m_baseScaleY = m_baseScaleY;
+		_data.m_baseScaleZ = m_baseScaleZ;
+
+		_data.m_colorHueSpeed = m_colorHueSpeed;
+		_data.m_colorSaturation = m_colorSaturation;
+		_data.m_colorBrightness = m_colorBrightness;
+		_data.m_colorAlpha = m_colorAlpha;
+
+		_data.m_rotateX = m_rotateX;
+		_data.m_rotateY = m_rotateY;
+		_data.m_rotateZ = m_rotateZ;
+		_data.m_rotationX = m_rotationX;
+		_data.m_rotationY = m_rotationY;
+		_data.m_rotationZ = m_rotationZ;
+
+		_data.m_3dMode = m_3dMode;
+		_data.m_tubeSpacing = m_tubeSpacing;
+
+		string prefix = "Assets/WhitneyDatas/randomWhitney_";
+		int fileNumber = 0;
+		string extension = ".asset";
+		while(true)
+		{
+			fileNumber++;
+			string filePath = prefix + fileNumber + extension;
+			if(!UnityEngine.Windows.File.Exists(prefix + fileNumber.ToString() + extension))
+			{
+				UnityEditor.AssetDatabase.CreateAsset(_data, filePath);
+				return;
+			}
+		}
 	}
 }
 

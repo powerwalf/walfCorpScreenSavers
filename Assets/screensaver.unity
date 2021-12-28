@@ -146,8 +146,10 @@ MonoBehaviour:
   m_numberOfObjects: 50
   m_circleSize: 1
   m_speedScaler: 0.01
+  m_disableHarmonicScaling: 0
   m_3dMode: 0
   m_tubeSpacing: 1
+  m_reverseZOrderIn3dMode: 1
   m_globalScale: 0.25
   m_baseScaleX: 1
   m_baseScaleY: 1
@@ -457,7 +459,7 @@ MonoBehaviour:
   m_scrollWheelSpeedScalar: 3
   m_minYRotation: -90
   m_maxYRotation: 90
-  m_distance: 5
+  m_distance: 2.5
   m_minDistance: 1
   m_maxDistance: 5
   m_resetToInitialTime: 0.5
@@ -493,6 +495,33 @@ MonoBehaviour:
   m_orbitController: {fileID: 534669906}
   m_whitney: {fileID: 36950084}
   m_timeBetweenRandomizations: 120
+  m_useWhitneyData: 1
+  m_whitneyDatas:
+  - {fileID: 11400000, guid: 61821d7c485a108488b9c936e17d3d23, type: 2}
+  - {fileID: 11400000, guid: 18a07605c45b5f04c87ef4515877ef83, type: 2}
+  - {fileID: 11400000, guid: 0d36bd1176207ca47abd8113be310bf5, type: 2}
+  - {fileID: 11400000, guid: 57a2a3c4e08370a4f9a202ea80f550d3, type: 2}
+  - {fileID: 11400000, guid: a19ada68c1136d747934bc205e1cde55, type: 2}
+  - {fileID: 11400000, guid: 2e2f0bb22b05b454eaf21bdf61e6532c, type: 2}
+  - {fileID: 11400000, guid: a2ae3c01211ee7c44850cf4222b15e64, type: 2}
+  - {fileID: 11400000, guid: 0755442f160e9a0409a2618a57145ae9, type: 2}
+  - {fileID: 11400000, guid: 2b4d622504d45eb45bf4b8abf69a3ff9, type: 2}
+  - {fileID: 11400000, guid: 0d700622068a6594b93314af50f55c2b, type: 2}
+  - {fileID: 11400000, guid: 3546bdc1304f63b429e04e09c766ccf5, type: 2}
+  - {fileID: 11400000, guid: 5850df70d1d3401439f7ca07debc5d0b, type: 2}
+  - {fileID: 11400000, guid: 2ea2caf6cb1c48c4489f51841ed7ae22, type: 2}
+  - {fileID: 11400000, guid: 3962bfd66baa67a458046ff1c0194afd, type: 2}
+  - {fileID: 11400000, guid: b747aa3f2aa40a544bab60180b065613, type: 2}
+  - {fileID: 11400000, guid: ef7421b88c9bf9a44923597232c4165f, type: 2}
+  - {fileID: 11400000, guid: ea7b46cdfa9b1ae4e9dda012915e1af0, type: 2}
+  - {fileID: 11400000, guid: 14d80cec3bbf89144a2df2d0dd9e8ebd, type: 2}
+  - {fileID: 11400000, guid: 1487058422744dc4a9d1ebea85b1bbb3, type: 2}
+  - {fileID: 11400000, guid: b1258fd17d81f0d48a375c10406f82bb, type: 2}
+  - {fileID: 11400000, guid: d06917602b1b0bb499f07aa718bdd4a9, type: 2}
+  - {fileID: 11400000, guid: 20659eb4ed54aa64f9fd03cc8684de33, type: 2}
+  - {fileID: 11400000, guid: 13ff580e720f4534fbb4bc7e92e72c08, type: 2}
+  - {fileID: 11400000, guid: 3447f1c6e4373064cb6bc379525276fb, type: 2}
+  - {fileID: 11400000, guid: c5620fa1cec0a364ebeb888f1deb4769, type: 2}
 --- !u!4 &1691599974
 Transform:
   m_ObjectHideFlags: 0

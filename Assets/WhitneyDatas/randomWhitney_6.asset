@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050c2a095768e5944bdaefb755ccb88e, type: 3}
+  m_Name: randomWhitney_6
+  m_EditorClassIdentifier: 
+  m_objectPrefab: {fileID: 0}
+  m_numberOfObjects: 77
+  m_circleSize: 1
+  m_speedScaler: 0.00199
+  m_globalScale: 0.206
+  m_baseScaleX: 0.1
+  m_baseScaleY: 1
+  m_baseScaleZ: 1
+  m_colorHueSpeed: 0.5
+  m_colorSaturation: 1
+  m_colorBrightness: 1
+  m_colorAlpha: 0.75
+  m_rotateX: 0
+  m_rotateY: 1
+  m_rotateZ: 0
+  m_rotationX: 0
+  m_rotationY: 0
+  m_rotationZ: 0
+  m_3dMode: 0
+  m_tubeSpacing: 1

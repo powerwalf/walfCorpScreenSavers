@@ -13,7 +13,7 @@ public class ScreensaverManager : MonoBehaviour
 
 	private void Update()
     {
-		if(Input.GetMouseButtonDown(0) || Input.GetMouseButton(1))
+		if(IsWhitelistedInput())
 		{
 			return;
 		}
@@ -23,4 +23,9 @@ public class ScreensaverManager : MonoBehaviour
 			Application.Quit();
 		}
     }
+
+	protected bool IsWhitelistedInput()
+	{
+		return Input.GetMouseButtonDown(0) || Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.S);
+	}
 }
