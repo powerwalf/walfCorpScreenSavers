@@ -233,6 +233,7 @@ public class Whitney : MonoBehaviour
 		SetFromWhitneyData(GetRandomWhitneyData());
 	}
 
+#if UNITY_EDITOR
 	public void SaveCurrentWhitneyDataToFile()
 	{
 		WhitneyData _data = ScriptableObject.CreateInstance<WhitneyData>();
@@ -275,5 +276,7 @@ public class Whitney : MonoBehaviour
 			}
 		}
 	}
+#endif
+
 }
 
